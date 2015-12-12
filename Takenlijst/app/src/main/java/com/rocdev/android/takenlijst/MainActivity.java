@@ -6,6 +6,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import java.util.ArrayList;
@@ -101,6 +102,8 @@ public class MainActivity extends AppCompatActivity {
             for (Taak t: taken) {
                 if (t.getDatumMillisVoltooid() > 0) {
                     t.setVerborgen(Taak.TRUE);
+                    Log.d("takenlijst", "taaknaam = " + t.getNaam() + " taakVerborgen = " + t.getVerborgen()
+                    + " millis = " + t.getDatumMillisVoltooid());
                     db.updateTaak(t);
                 }
             }

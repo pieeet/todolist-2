@@ -127,10 +127,9 @@ public class TakenlijstDB {
         ArrayList<Taak> taken = new ArrayList<>();
         while (cursor.moveToNext()) {
             Taak taak = getTaakVanCursor(cursor);
-            if (taak.getVerborgen() != 1) {
-                taken.add(taak);
-            }
-
+            Log.d("takenlijst", "taak: + " + taak.getNaam() + "; waarde verborgen = " + taak.getVerborgen());
+            Log.d("takenlijst", "Taak Milliseconden: " + taak.getDatumMillisVoltooid());
+            taken.add(taak);
         }
         closeCursor(cursor);
         closeDB();
@@ -174,7 +173,7 @@ public class TakenlijstDB {
                 taak.setLijstId(cursor.getInt(TAAK_LIJST_ID_COL));
                 taak.setNaam(cursor.getString(TAAK_NAAM_COL));
                 taak.setNotitie(cursor.getString(TAAK_NOTITIE_COL));
-                taak.setDatumMillisVoltooid(cursor.getInt(TAAK_AFGEROND_COL));
+                taak.setDatumMillisVoltooid(cursor.getLong(TAAK_AFGEROND_COL));
                 taak.setVerborgen(cursor.getInt(TAAK_VERBORGEN_COL));
                 return taak;
             } catch(Exception e) {return null;}
@@ -229,11 +228,13 @@ public class TakenlijstDB {
 
     public int updateTaak(Taak taak) {
         ContentValues cv = this.maakContenValues(taak);
-        String where = TAAK_ID + "= ?";
+        String where = TAAK_ID + " = ?";
         String[] whereArgs = { String.valueOf(taak.getTaakId()) };
         this.openWritableDB();
         int rijCount = db.update(TAAK_TABEL, cv, where, whereArgs);
         Log.d("takenlijst", "rijCount = " + rijCount);
+        Log.d("takenlijst", "Taak Milliseconden: " + taak.getDatumMillisVoltooid());
+        Log.d("takenlijst", "Taak Verborgen: " + taak.getVerborgen());
         this.closeDB();
         // broadcast verandering voor widget
         broadcastTaakVeranderd();

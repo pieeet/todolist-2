@@ -75,7 +75,8 @@ public class TaakLayout extends RelativeLayout implements View.OnClickListener {
         switch (v.getId()) {
             case R.id.voltooidCheckBox:
                 if (checkBox.isChecked()) {
-                    taak.setDatumMillisVoltooid(System.currentTimeMillis());
+                    long l = System.currentTimeMillis();
+                    taak.setDatumMillisVoltooid(l);
                 } else {
                     taak.setDatumMillisVoltooid(0);
                 }
@@ -87,9 +88,6 @@ public class TaakLayout extends RelativeLayout implements View.OnClickListener {
                 intent.putExtra("editmode", true);
                 intent.putExtra("taakId", taak.getTaakId());
                 context.startActivity(intent);
-
-
-
         }
 
     }
