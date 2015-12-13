@@ -5,7 +5,7 @@
     android:minHeight="80dp"
     android:minWidth="250dp"
     android:updatePeriodMillis="0"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:previewImage="@drawable/preview_takenlijst"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="home_screen"></appwidget-provider>
 

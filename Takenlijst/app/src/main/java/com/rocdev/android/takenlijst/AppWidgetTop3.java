@@ -51,15 +51,6 @@ public class AppWidgetTop3 extends AppWidgetProvider {
         // Enter relevant functionality for when the last widget is disabled
     }
 
-    @Override
-    public void onReceive(Context context, Intent intent) {
-        super.onReceive(context, intent);
-        if (intent.getAction().equals(TakenlijstDB.TAAK_VERANDERD)) {
-            AppWidgetManager manager = AppWidgetManager.getInstance(context);
-            ComponentName provider = new ComponentName(context, AppWidgetTop3.class);
-            int[] appWidgetIds = manager.getAppWidgetIds(provider);
-            onUpdate(context, manager,appWidgetIds);
-        }
-    }
+
 }
 
