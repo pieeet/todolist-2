@@ -1,5 +1,7 @@
 package com.rocdev.android.takenlijst;
 
+import android.appwidget.AppWidgetManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +9,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import java.util.ArrayList;
 
@@ -116,6 +119,17 @@ public class TakenlijstDB {
         context.sendBroadcast(intent);
     }
 
+    private void updateWidget() {
+        AppWidgetManager appWidgetManager = AppWidgetManager.getInstance(context);
+        RemoteViews remoteViews = new RemoteViews(context.getPackageName(), R.layout.app_widget_top3);
+        ComponentName widget = new ComponentName(context, AppWidgetTop3.class);
+        String[] top3Taken = this.getWidgetTaken(3);
+        remoteViews.setTextViewText(R.id.taak1TextView, top3Taken[0]);
+        remoteViews.setTextViewText(R.id.taak2TextView, top3Taken[1]);
+        remoteViews.setTextViewText(R.id.taak3TextView, top3Taken[2]);
+        appWidgetManager.updateAppWidget(widget, remoteViews);
+    }
+
     public ArrayList<Taak> getTaken(String lijstNaam) {
 
         String where = TAAK_LIJST_ID + " = ? AND " +
@@ -213,16 +227,12 @@ public class TakenlijstDB {
         return lijst;
     }
 
-
-
     public long voegTaakToe(Taak taak) {
         ContentValues cv = this.maakContenValues(taak);
         this.openWritableDB();
         long rijId = db.insert(TAAK_TABEL, null, cv);
         this.closeDB();
-
-        // broadcast verandering voor widget
-        broadcastTaakVeranderd();
+        updateWidget();
         return rijId;
     }
 
@@ -232,12 +242,8 @@ public class TakenlijstDB {
         String[] whereArgs = { String.valueOf(taak.getTaakId()) };
         this.openWritableDB();
         int rijCount = db.update(TAAK_TABEL, cv, where, whereArgs);
-        Log.d("takenlijst", "rijCount = " + rijCount);
-        Log.d("takenlijst", "Taak Milliseconden: " + taak.getDatumMillisVoltooid());
-        Log.d("takenlijst", "Taak Verborgen: " + taak.getVerborgen());
         this.closeDB();
-        // broadcast verandering voor widget
-        broadcastTaakVeranderd();
+        updateWidget();
         return rijCount;
     }
 
@@ -278,11 +284,7 @@ public class TakenlijstDB {
         closeCursor(cursor);
         closeDB();
         return taakNamen;
-
     }
-
-
-
 
 
     class DBHelper extends SQLiteOpenHelper {
